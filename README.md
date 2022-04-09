@@ -8,6 +8,6 @@
 
 See documentation on dockerhub: [octoprint/octoprint](https://hub.docker.com/r/octoprint/octoprint/)
 
-Stream URL: /webcam/?action=stream
-Snapshot URL: http://localhost:8080/?action=snapshot
-Path to FFMPEG: /usr/bin/ffmpeg
+    Stream URL: /webcam/?action=stream
+    Snapshot URL: http://localhost:8080/?action=snapshot
+    Path to FFMPEG: /usr/bin/ffmpeg
