@@ -1,16 +1,16 @@
 - name: install dependencies
-  apt:
+  ansible.builtin.apt:
     name: apt-transport-https
     state: latest
 
 - name: add tailscale apt key
-  apt_key:
+  ansible.builtin.apt_key:
     url: https://pkgs.tailscale.com/stable/raspbian/buster.gpg
     state: present
     id: "957F5868"
 
 - name: add tailscale apt repo
-  get_url:
+  ansible.builtin.get_url:
     url: https://pkgs.tailscale.com/stable/raspbian/buster.list
     dest: /etc/apt/sources.list.d/tailscale.list
     owner: root
@@ -18,17 +18,17 @@
   register: add_tailscale_repo
 
 - name: update apt cache
-  apt:
+  ansible.builtin.apt:
     update_cache: yes
   when: add_tailscale_repo.changed
 
 - name: install tailscale
-  apt:
+  ansible.builtin.apt:
     name: tailscale
     state: latest
 
 - name: enable tailscale service
-  systemd:
+  ansible.builtin.systemd:
     name: tailscaled
     state: started
     enabled: yes
@@ -51,5 +51,12 @@
         reload: yes
         sysctl_set: yes
 
+- name: check tailscale status
+  ansible.builtin.command: "tailscale status"
+  register: tailscale_status
+  failed_when: false
+  changed_when: false
+
 - name: bring tailscale up
-  command: "tailscale up --authkey={{ tailscale_auth_key }} {{ tailscale_extra_args | default() }}"
+  ansible.builtin.command: "tailscale up --authkey={{ tailscale_auth_key }} {{ tailscale_extra_args | default() }}"
+  when: "tailscale_status.rc != 0"

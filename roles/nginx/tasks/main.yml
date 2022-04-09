@@ -1,16 +1,16 @@
 - name: install nginx
-  apt:
+  ansible.builtin.apt:
     name: nginx
     state: latest
 
 - name: enable nginx service
-  systemd:
+  ansible.builtin.systemd:
     name: nginx
     state: started
     enabled: yes
 
 - name: disable default host
-  file:
+  ansible.builtin.file:
     path: /etc/nginx/sites-enabled/default
     state: absent
   notify:
