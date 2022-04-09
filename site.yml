@@ -1,0 +1,4 @@
+- name: Update the Raspberry Pi's
+  hosts: all
+  roles:
+  - docker_host

@@ -1,0 +1,32 @@
+- name: set password for pi user
+  user:
+    name: pi
+    password: "{{ pi_passwd_hash }}"
+
+- name: disable motd message
+  lineinfile:
+    path: /etc/pam.d/sshd
+    regexp: '^session\s+optional\s+pam_motd'
+    state: absent
+  notify:
+  - restart ssh
+
+- name: disable locale env forwarding
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^AcceptEnv\s+LANG'
+    state: absent
+  notify:
+  - restart ssh
+
+- name: update apt cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 86400  # 24h
+
+- name: install required system packages
+  apt:
+    pkg:
+      - apt-transport-https
+      - ca-certificates
+    state: latest
