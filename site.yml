@@ -3,6 +3,7 @@
   roles:
   - tailscale_node
   - octoprint_server
+  tags: [ printserver ]
 
 - name: Smart Home Controller
   hosts: smarthome
@@ -10,3 +11,10 @@
   - tailscale_node
   - pihole
   - home_assistant
+  tags: [ smarthome ]
+
+- name: Audio Streamer
+  hosts: streamer
+  roles:
+  - airplay_receiver
+  tags: [ streamer ]

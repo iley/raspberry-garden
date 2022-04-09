@@ -7,6 +7,7 @@
   apt_key:
     url: https://pkgs.tailscale.com/stable/raspbian/buster.gpg
     state: present
+    id: "957F5868"
 
 - name: add tailscale apt repo
   get_url:
@@ -52,4 +53,3 @@
 
 - name: bring tailscale up
   command: "tailscale up --authkey={{ tailscale_auth_key }} {{ tailscale_extra_args | default() }}"
-  no_log: true

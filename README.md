@@ -2,7 +2,7 @@
 
 ## Running
 
-    ansible-playbook -i hosts.ini -e "@secrets.yml" site.yml
+    ansible-playbook -i hosts.yml -e "@secrets.yml" site.yml
 
 ## OctoPrint settings
 
