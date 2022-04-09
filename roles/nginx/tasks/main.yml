@@ -1,0 +1,17 @@
+- name: install nginx
+  apt:
+    name: nginx
+    state: latest
+
+- name: enable nginx service
+  systemd:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: disable default host
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify:
+  - restart nginx

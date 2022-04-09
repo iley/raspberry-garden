@@ -1,6 +1,10 @@
-- name: Update the Raspberry Pi's
+- name: Basic configuration
   hosts: all
   roles:
-  - base
-  - docker_host
   - tailscale_node
+  - docker_host
+
+- name: Octoprint server
+  hosts: printserver
+  roles:
+  - octoprint_server

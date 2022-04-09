@@ -10,13 +10,20 @@
     filename: docker
     update_cache: yes
 
-- name: install docker
+- name: install docker and dependencies
   apt:
     name:
     - docker-ce
     - docker-ce-cli
     - containerd.io
+    - python3-dev
+    - python3-pip
     state: latest
+
+# Requred to use docker_container
+- name: install docker module for python
+  pip:
+    name: docker
 
 - name: add user pi to group docker
   user:

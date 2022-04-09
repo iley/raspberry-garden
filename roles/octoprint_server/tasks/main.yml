@@ -1,0 +1,14 @@
+- name: run docker container
+  community.docker.docker_container:
+    name: octoprint
+    image: octoprint/octoprint
+    volumes:
+    - octoprint:/octoprint
+    devices:
+    - /dev/ttyAMA0
+    - /dev/video0
+    restart_policy: unless-stopped
+    env:
+      ENABLE_MJPG_STREAMER: "true"
+    published_ports:
+    - 80:80
