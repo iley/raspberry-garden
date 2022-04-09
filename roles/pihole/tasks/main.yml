@@ -1,0 +1,42 @@
+- name: discover tailscale ip4 address
+  ansible.builtin.command: "tailscale ip -4"
+  register: tailscale_ip4
+  changed_when: false
+
+- name: run docker container
+  community.docker.docker_container:
+    name: pihole
+    image: pihole/pihole
+    hostname: pi.hole
+    volumes:
+    - pihole:/etc/pihole
+    - pihole-dnsmasq:/etc/dnsmasq.d"
+    restart_policy: unless-stopped
+    env:
+      TZ: "Ireland/Dublin"
+      VIRTUAL_HOST: "pi.hole"
+      PROXY_LOCATION: "pi.hole"
+      WEBPASSWORD: "{{ pihole_password }}"
+      ServerIP: "{{ tailscale_ip4.stdout }}"
+    published_ports:
+    - 53:53/udp
+    - 8000:80/tcp
+    dns_servers:
+    - "1.1.1.1"
+
+- name: generate nginx config
+  ansible.builtin.template:
+    src: nginx_pihole.j2
+    dest: /etc/nginx/sites-available/pihole
+    owner: root
+    mode: '0600'
+  notify: restart nginx
+  tags: [ debug ]
+
+- name: enable nginx config
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/pihole
+    dest: /etc/nginx/sites-enabled/pihole
+    state: link
+  notify: restart nginx
+  tags: [ debug ]

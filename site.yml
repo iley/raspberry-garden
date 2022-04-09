@@ -1,10 +1,11 @@
-- name: Basic configuration
-  hosts: all
-  roles:
-  - tailscale_node
-  - docker_host
-
 - name: Octoprint server
   hosts: printserver
   roles:
+  - tailscale_node
   - octoprint_server
+
+- name: Smart Home Controller
+  hosts: smarthome
+  roles:
+  - tailscale_node
+  - pihole

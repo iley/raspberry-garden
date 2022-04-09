@@ -1,10 +1,10 @@
 - name: set password for pi user
-  user:
+  ansible.builtin.user:
     name: pi
     password: "{{ pi_user_password_hash }}"
 
 - name: disable motd message
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/pam.d/sshd
     regexp: '^session\s+optional\s+pam_motd'
     state: absent
@@ -12,7 +12,7 @@
   - restart ssh
 
 - name: disable locale env forwarding
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '^AcceptEnv\s+LANG'
     state: absent
@@ -20,12 +20,12 @@
   - restart ssh
 
 - name: update apt cache
-  apt:
+  ansible.builtin.apt:
     update_cache: yes
     cache_valid_time: 86400  # 24h
 
 - name: install required system packages
-  apt:
+  ansible.builtin.apt:
     pkg:
       - apt-transport-https
       - ca-certificates
