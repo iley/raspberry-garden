@@ -6,7 +6,7 @@
 - name: generate config files
   ansible.builtin.template:
     src: "{{ item }}.j2"
-    dest: /etc/{{ item }}
+    dest: /etc/hass/{{ item }}
     owner: root
     mode: 600
   with_items:
