@@ -1,4 +1,6 @@
 - name: Update the Raspberry Pi's
   hosts: all
   roles:
+  - base
   - docker_host
+  - tailscale_node

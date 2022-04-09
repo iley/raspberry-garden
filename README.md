@@ -1,3 +1,5 @@
-Run a playbook:
+# Ansible playbook for setting up my Raspberry Pi fleet
 
-  ansible-playbook -i hosts.ini site.yml
+Run the playbook:
+
+    ansible-playbook -i hosts.ini -e "@secrets.yml" site.yml

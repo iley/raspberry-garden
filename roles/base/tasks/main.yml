@@ -1,7 +1,7 @@
 - name: set password for pi user
   user:
     name: pi
-    password: "{{ pi_passwd_hash }}"
+    password: "{{ pi_user_password | password_hash('sha512') }}"
 
 - name: disable motd message
   lineinfile:

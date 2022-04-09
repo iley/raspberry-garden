@@ -1,0 +1,1 @@
+tailscale_extra_args: "--accept-dns=false --advertise-exit-node=true"

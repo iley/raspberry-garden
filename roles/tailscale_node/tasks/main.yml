@@ -1,0 +1,55 @@
+- name: install dependencies
+  apt:
+    name: apt-transport-https
+    state: latest
+
+- name: add tailscale apt key
+  apt_key:
+    url: https://pkgs.tailscale.com/stable/raspbian/buster.gpg
+    state: present
+
+- name: add tailscale apt repo
+  get_url:
+    url: https://pkgs.tailscale.com/stable/raspbian/buster.list
+    dest: /etc/apt/sources.list.d/tailscale.list
+    owner: root
+    mode: '0640'
+  register: add_tailscale_repo
+
+- name: update apt cache
+  apt:
+    update_cache: yes
+  when: add_tailscale_repo.changed
+
+- name: install tailscale
+  apt:
+    name: tailscale
+    state: latest
+
+- name: enable tailscale service
+  systemd:
+    name: tailscaled
+    state: started
+    enabled: yes
+
+- name: enable ip forwarding
+  block:
+    - name: enable ipv4 forwarding
+      ansible.posix.sysctl:
+        name: net.ipv4.ip_forward
+        value: '1'
+        state: present
+        reload: yes
+        sysctl_set: yes
+    
+    - name: enable ipv6 forwarding
+      ansible.posix.sysctl:
+        name: net.ipv6.conf.all.forwarding
+        value: '1'
+        state: present
+        reload: yes
+        sysctl_set: yes
+
+- name: bring tailscale up
+  command: "tailscale up --authkey={{ tailscale_auth_key }} {{ tailscale_extra_args | default() }}"
+  no_log: true
