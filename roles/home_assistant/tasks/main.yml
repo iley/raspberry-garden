@@ -1,0 +1,46 @@
+- name: create config directory
+  ansible.builtin.file:
+    dest: /etc/hass
+    state: directory
+
+- name: generate config files
+  ansible.builtin.template:
+    src: "{{ item }}.j2"
+    dest: /etc/{{ item }}
+    owner: root
+    mode: 600
+  with_items:
+  - configuration.yaml
+  - automations.yaml
+  - scripts.yaml
+  - scenes.yaml
+  notify: restart hass
+
+- name: run docker container
+  community.docker.docker_container:
+    name: hass
+    image: ghcr.io/home-assistant/home-assistant:stable
+    hostname: smarthome
+    network_mode: host
+    devices:
+    - /dev/ttyUSB0
+    volumes:
+    - /etc/hass:/config
+    restart_policy: unless-stopped
+    env:
+      TZ: "Europe/Dublin"
+
+- name: generate nginx config
+  ansible.builtin.template:
+    src: nginx_hass.j2
+    dest: /etc/nginx/sites-available/hass
+    owner: root
+    mode: '0600'
+  notify: restart nginx
+
+- name: enable nginx config
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/hass
+    dest: /etc/nginx/sites-enabled/hass
+    state: link
+  notify: restart nginx

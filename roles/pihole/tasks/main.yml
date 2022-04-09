@@ -13,7 +13,7 @@
     - pihole-dnsmasq:/etc/dnsmasq.d"
     restart_policy: unless-stopped
     env:
-      TZ: "Ireland/Dublin"
+      TZ: "Europe/Dublin"
       VIRTUAL_HOST: "pi.hole"
       PROXY_LOCATION: "pi.hole"
       WEBPASSWORD: "{{ pihole_password }}"
@@ -31,7 +31,6 @@
     owner: root
     mode: '0600'
   notify: restart nginx
-  tags: [ debug ]
 
 - name: enable nginx config
   ansible.builtin.file:
@@ -39,4 +38,3 @@
     dest: /etc/nginx/sites-enabled/pihole
     state: link
   notify: restart nginx
-  tags: [ debug ]

@@ -1,0 +1,4 @@
+dependencies:
+- role: base
+- role: nginx
+- role: tailscale_node

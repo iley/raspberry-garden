@@ -1,0 +1,79 @@
+- id: telegram_open_gate
+  alias: Open Gate via Telegram Message
+  trigger:
+  - platform: event
+    event_type: telegram_command
+    event_data:
+      command: /open
+  action:
+  - service: telegram_bot.send_message
+    data:
+      message: Opening the gate
+  - service: switch.turn_on
+    data:
+      entity_id: switch.open_gate
+  mode: single
+- id: '1649092054904'
+  alias: Office Lamp - On
+  description: ''
+  trigger:
+  - device_id: 2917ccdc630abad22d599a67783a0a2b
+    domain: zha
+    platform: device
+    type: remote_button_short_press
+    subtype: turn_on
+  condition: []
+  action:
+  - type: turn_on
+    device_id: f2d56d4629507b306acaec2f74b0108c
+    entity_id: light.ikea_of_sweden_tradfri_bulb_e14_w_op_ch_400lm_0cec48fe_level_on_off
+    domain: light
+  mode: single
+- id: '1649092129287'
+  alias: Office Lamp - Off
+  description: ''
+  trigger:
+  - device_id: 2917ccdc630abad22d599a67783a0a2b
+    domain: zha
+    platform: device
+    type: remote_button_short_press
+    subtype: turn_off
+  condition: []
+  action:
+  - type: turn_off
+    device_id: f2d56d4629507b306acaec2f74b0108c
+    entity_id: light.ikea_of_sweden_tradfri_bulb_e14_w_op_ch_400lm_0cec48fe_level_on_off
+    domain: light
+  mode: single
+- id: '1649092260802'
+  alias: Office Lamp - Dim Up
+  description: ''
+  trigger:
+  - device_id: 2917ccdc630abad22d599a67783a0a2b
+    domain: zha
+    platform: device
+    type: remote_button_long_press
+    subtype: dim_up
+  condition: []
+  action:
+  - device_id: f2d56d4629507b306acaec2f74b0108c
+    domain: light
+    entity_id: light.ikea_of_sweden_tradfri_bulb_e14_w_op_ch_400lm_0cec48fe_level_on_off
+    type: brightness_increase
+  mode: single
+- id: '1649092328798'
+  alias: Office Lamp - Dim Down
+  description: ''
+  trigger:
+  - device_id: 2917ccdc630abad22d599a67783a0a2b
+    domain: zha
+    platform: device
+    type: remote_button_long_press
+    subtype: dim_down
+  condition: []
+  action:
+  - device_id: f2d56d4629507b306acaec2f74b0108c
+    domain: button
+    entity_id: button.ikea_of_sweden_tradfri_bulb_e14_w_op_ch_400lm_0cec48fe_identify
+    type: press
+  mode: single

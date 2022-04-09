@@ -9,3 +9,4 @@
   roles:
   - tailscale_node
   - pihole
+  - home_assistant

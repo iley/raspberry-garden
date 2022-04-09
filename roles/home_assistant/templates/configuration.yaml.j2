@@ -1,0 +1,29 @@
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+# Text to speech
+tts:
+- platform: google_translate
+
+http:
+  server_host: 127.0.0.1
+  server_port: 8123
+  use_x_forwarded_for: true
+  trusted_proxies: 
+  - 127.0.0.1
+
+homekit:
+  include_entities:
+  - switch.open_gate
+
+telegram_bot:
+- platform: polling
+  api_key: {{ hass_telegram_bot_token }}
+  allowed_chat_ids:
+  {% for chat_id in hass_telegram_bot_chat_ids %}
+  - {{ chat_id }}
+  {% endfor %}
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml

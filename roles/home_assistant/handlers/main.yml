@@ -1,0 +1,9 @@
+- name: restart nginx
+  ansible.builtin.service:
+    name: nginx
+    state: restarted
+
+- name: restart hass
+  community.docker.docker_container:
+    name: hass
+    restart: yes
