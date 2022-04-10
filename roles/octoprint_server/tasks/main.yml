@@ -1,3 +1,45 @@
+# This config assumes that the 3D printer is connected to Raspberry Pi's pin header.
+
+- name: configure serial port
+  block:
+  - name: remove enable_uart 0 from /boot/config.txt
+    ansible.builtin.lineinfile:
+      path: /boot/config.txt
+      regexp: 'enable_uart=0'
+      state: absent
+    notify: reboot
+
+  - name: add enable_uart 1 to /boot/config.txt
+    ansible.builtin.lineinfile:
+      path: /boot/config.txt
+      line: 'enable_uart=1'
+      state: present
+    notify: reboot
+
+  - name: disable serial console
+    ansible.builtin.replace:
+      path: /boot/cmdline.txt
+      regexp: "console=serial\\d,\\d+\\s+"
+      replace: ""
+    notify: reboot
+
+  - name: remove pi3-miniuart-bt from /boot/config.txt
+    ansible.builtin.lineinfile:
+      path: /boot/config.txt
+      line: 'dtoverlay=pi3-disable-bt'
+      state: absent
+    notify: reboot
+
+  # Raspberry Pi has 2 UARTs: capable PL011 and limited miniuart.
+  # By default PL011 is configured for bluetooth and miniuart for GPIO pins.
+  # We change that to use PL011 for the 3D printer communication.
+  - name: swap miniuart and PL011
+    ansible.builtin.lineinfile:
+      path: /boot/config.txt
+      line: 'dtoverlay=pi3-miniuart-bt'
+      state: present
+    notify: reboot
+
 - name: run docker container
   community.docker.docker_container:
     name: octoprint
@@ -5,7 +47,7 @@
     volumes:
     - octoprint:/octoprint
     devices:
-    - /dev/ttyAMA0
+    - /dev/ttyS0  # Device name for Raspberry Pi 3. Other models might use /dev/ttyAMA0.
     - /dev/video0
     restart_policy: unless-stopped
     env:
