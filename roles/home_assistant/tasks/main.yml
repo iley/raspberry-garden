@@ -16,6 +16,14 @@
   - scenes.yaml
   notify: restart hass
 
+- name: copy extra config files
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /etc/hass/{{ item }}
+  with_items:
+  - blueprints/automation/tradri_5_button_remote.yaml
+  notify: restart hass
+
 - name: run docker container
   community.docker.docker_container:
     name: hass

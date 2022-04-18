@@ -13,8 +13,10 @@ http:
   - 127.0.0.1
 
 homekit:
-  include_entities:
-  - switch.open_gate
+- filter:
+    include_domains:
+    - light
+    - switch
 
 telegram_bot:
 - platform: polling
