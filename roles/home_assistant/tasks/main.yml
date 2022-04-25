@@ -21,7 +21,8 @@
     src: "{{ item }}"
     dest: /etc/hass/{{ item }}
   with_items:
-  - blueprints/automation/tradri_5_button_remote.yaml
+  - blueprints/automation/ikea_5_button_remote.yaml
+  - blueprints/automation/ikea_on_off_remote.yaml
   notify: restart hass
 
 - name: run docker container
