@@ -48,6 +48,7 @@
     - octoprint:/octoprint
     devices:
     - /dev/ttyAMA0  # Device name for Raspberry Pi 3 using PL011. Other models might use /dev/ttyS0.
+    - /dev/ttyACM0  # USB connection
     - /dev/video0
     restart_policy: unless-stopped
     env:
