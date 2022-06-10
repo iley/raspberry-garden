@@ -44,6 +44,7 @@
   community.docker.docker_container:
     name: octoprint
     image: octoprint/octoprint
+    pull: yes
     volumes:
     - octoprint:/octoprint
     devices:
