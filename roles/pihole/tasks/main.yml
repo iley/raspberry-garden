@@ -2,6 +2,7 @@
   community.docker.docker_container:
     name: pihole
     image: pihole/pihole
+    pull: yes
     volumes:
     - pihole:/etc/pihole
     - pihole-dnsmasq:/etc/dnsmasq.d"
