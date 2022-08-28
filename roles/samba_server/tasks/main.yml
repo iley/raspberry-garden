@@ -1,0 +1,40 @@
+- name: install packages
+  ansible.builtin.apt:
+    pkg:
+      - exfat-fuse
+      - exfat-utils
+      - samba
+      - samba-common-bin
+    state: present
+  tags: samba
+
+- name: mount external drive
+  ansible.posix.mount:
+    path: /mnt/extdrive
+    src: UUID=60F1-D0BA
+    fstype: exfat-fuse
+    opts: noatime
+    state: mounted
+  tags: samba
+
+- name: generate sambda config file
+  ansible.builtin.template:
+    src: "smb.conf.j2"
+    dest: /etc/samba/smb.conf
+    owner: root
+    mode: 600
+  notify: restart samba
+
+- name: create samba users
+  shell: >
+    set -o nounset -o pipefail -o errexit &&
+    (pdbedit --user={{ item.name }} 2>&1 > /dev/null) \
+    || (echo {{ item.password }}; echo {{ item.password }}) \
+    | smbpasswd -s -a {{ item.name }}
+  args:
+    executable: /bin/bash
+  with_items: "{{ samba_users }}"
+  no_log: true
+  register: create_user_output
+  changed_when: "'Added user' in create_user_output.stdout"
+  tags: samba
