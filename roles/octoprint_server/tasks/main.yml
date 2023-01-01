@@ -55,4 +55,20 @@
     env:
       ENABLE_MJPG_STREAMER: "true"
     published_ports:
-    - 80:80
+    - 127.0.0.1:5000:5000
+    - 127.0.0.1:8080:8080
+
+- name: generate nginx config
+  ansible.builtin.template:
+    src: nginx_octoprint.j2
+    dest: /etc/nginx/sites-available/octoprint
+    owner: root
+    mode: '0600'
+  notify: restart nginx
+
+- name: enable nginx config
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/octoprint
+    dest: /etc/nginx/sites-enabled/octoprint
+    state: link
+  notify: restart nginx

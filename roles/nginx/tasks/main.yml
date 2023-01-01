@@ -15,3 +15,54 @@
     state: absent
   notify:
   - restart nginx
+
+- name: create directory for acme.sh
+  ansible.builtin.file:
+    path: /opt/acme.sh
+    state: directory
+    owner: root
+    mode: '0700'
+
+- name: download acme.sh
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh
+    dest: /opt/acme.sh/acme.sh
+    owner: root
+    mode: '0700'
+
+- name: create dnsapi directory
+  ansible.builtin.file:
+    path: /opt/acme.sh/dnsapi
+    state: directory
+    owner: root
+    mode: '0700'
+
+- name: download AWS dns hook
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/acmesh-official/acme.sh/master/dnsapi/dns_aws.sh
+    dest: /opt/acme.sh/dnsapi/dns_aws.sh
+    owner: root
+    mode: '0700'
+
+- name: register account with acme.sh
+  ansible.builtin.command: "/opt/acme.sh/acme.sh --home /opt/acme.sh --register-account -m {{ acme_email }}"
+  args:
+    creates: /opt/acme.sh/ca
+
+# AWS credentials are automatically saved.
+- name: get certificate
+  ansible.builtin.command: "/opt/acme.sh/acme.sh --home /opt/acme.sh --issue --dns dns_aws -d {{ nginx_domain }} --reloadcmd 'systemctl restart nginx.service'"
+  args:
+    creates: "/opt/acme.sh/{{ nginx_domain }}/ca.cer"
+  environment:
+    AWS_ACCESS_KEY_ID: "{{ acme_aws_access_key_id }}"
+    AWS_SECRET_ACCESS_KEY: "{{ acme_aws_secret_access_key }}"
+  notify:
+  - restart nginx
+
+- name: add cron entry for acme.sh
+  ansible.builtin.cron:
+    name: "acme.sh"
+    hour: 0
+    minute: 0
+    job: "/opt/acme.sh/acme.sh --cron --home /opt/acme.sh > /dev/null"
