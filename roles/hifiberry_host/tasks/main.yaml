@@ -5,6 +5,13 @@
     replace: '#dtparam=audio=on'
   notify: reboot
 
+- name: "Disable HDMI audio"
+  ansible.builtin.replace:
+    path: /boot/config.txt
+    regexp: '^dtoverlay=vc4-kms-v3d$'
+    replace: 'dtoverlay=vc4-kms-v3d,audio=off'
+  notify: reboot
+
 - name: "Enable hifiberry overlay"
   ansible.builtin.lineinfile:
     path: /boot/config.txt
