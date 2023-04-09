@@ -1,0 +1,11 @@
+- name: run docker container
+  community.docker.docker_container:
+    name: raspotify
+    image: derkades/raspotify
+    pull: yes
+    devices:
+    - /dev/snd
+    network_mode: host
+    restart_policy: unless-stopped
+    env:
+      SPOTIFY_NAME: "Living Room Spotify"

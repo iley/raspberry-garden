@@ -16,4 +16,5 @@
   - airplay_receiver
   - pihole
   - samba_server
+  - spotify_connect
   tags: [ streamer ]

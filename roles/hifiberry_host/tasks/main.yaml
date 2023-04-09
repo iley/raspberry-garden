@@ -1,0 +1,20 @@
+- name: "Disable default audio driver"
+  ansible.builtin.replace:
+    path: /boot/config.txt
+    regexp: '^dtparam=audio=on'
+    replace: '#dtparam=audio=on'
+  notify: reboot
+
+- name: "Enable hifiberry overlay"
+  ansible.builtin.lineinfile:
+    path: /boot/config.txt
+    line: dtoverlay=hifiberry-digi
+    state: present
+  notify: reboot
+
+- name: "Disable EEPROM"
+  ansible.builtin.lineinfile:
+    path: /boot/config.txt
+    line: force_eeprom_read=0
+    state: present
+  notify: reboot
