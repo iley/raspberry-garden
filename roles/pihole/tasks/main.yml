@@ -15,8 +15,8 @@
     - "53:53/tcp"
     - "8000:80/tcp"
     dns_servers:
-    - "8.8.8.8"
-    - "8.8.4.4"
+    - "193.110.81.0"
+    - "185.253.5.0"
 
 - name: generate nginx config
   ansible.builtin.template:
