@@ -37,26 +37,27 @@
     owner: root
     mode: '0700'
 
-- name: download AWS dns hook
+- name: download Cloudflare dns hook
   ansible.builtin.get_url:
-    url: https://raw.githubusercontent.com/acmesh-official/acme.sh/master/dnsapi/dns_aws.sh
-    dest: /opt/acme.sh/dnsapi/dns_aws.sh
+    url: https://raw.githubusercontent.com/acmesh-official/acme.sh/master/dnsapi/dns_cf.sh
+    dest: /opt/acme.sh/dnsapi/dns_cf.sh
     owner: root
     mode: '0700'
 
 - name: register account with acme.sh
-  ansible.builtin.command: "/opt/acme.sh/acme.sh --home /opt/acme.sh --register-account -m {{ acme_email }}"
+  ansible.builtin.command: "/opt/acme.sh/acme.sh --home /opt/acme.sh --server letsencrypt --register-account -m {{ acme_email }}"
   args:
     creates: /opt/acme.sh/ca
 
 # AWS credentials are automatically saved.
 - name: get certificate
-  ansible.builtin.command: "/opt/acme.sh/acme.sh --home /opt/acme.sh --issue --dns dns_aws -d {{ nginx_domain }} --reloadcmd 'systemctl restart nginx.service'"
+  ansible.builtin.command: "/opt/acme.sh/acme.sh --home /opt/acme.sh --server letsencrypt --issue --dns dns_cf -d {{ nginx_domain }} --reloadcmd 'systemctl restart nginx.service'"
   args:
-    creates: "/opt/acme.sh/{{ nginx_domain }}/ca.cer"
+    creates: "/opt/acme.sh/{{ nginx_domain }}_ecc/ca.cer"
   environment:
-    AWS_ACCESS_KEY_ID: "{{ acme_aws_access_key_id }}"
-    AWS_SECRET_ACCESS_KEY: "{{ acme_aws_secret_access_key }}"
+    CF_Token: "{{ acme_cf_token }}"
+    CF_Account_ID: "{{ acme_cf_account_id }}"
+    CF_Zone_ID: "{{ acme_cf_zone_id }}"
   notify:
   - restart nginx
 
