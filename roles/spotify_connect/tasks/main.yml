@@ -9,3 +9,7 @@
     restart_policy: unless-stopped
     env:
       SPOTIFY_NAME: "Living Room Spotify"
+    log_driver: json-file
+    log_options:
+      max-size: 10m
+      max-file: "3"

@@ -17,6 +17,10 @@
     dns_servers:
     - "193.110.81.0"
     - "185.253.5.0"
+    log_driver: json-file
+    log_options:
+      max-size: 10m
+      max-file: "3"
 
 - name: generate nginx config
   ansible.builtin.template:
