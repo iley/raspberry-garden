@@ -37,6 +37,7 @@
     - /dev/ttyUSB0
     volumes:
     - /etc/hass:/config
+    - /dev/null:/config/home-assistant.log
     restart_policy: unless-stopped
     env:
       TZ: "Europe/Dublin"

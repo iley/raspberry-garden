@@ -4,11 +4,11 @@
   - octoprint_server
   tags: [ printserver ]
 
-- name: Smart Home Controller
-  hosts: smarthome
-  roles:
-  - home_assistant
-  tags: [ smarthome ]
+# - name: Smart Home Controller
+#   hosts: smarthome
+#   roles:
+#   - home_assistant
+#   tags: [ smarthome ]
 
 # - name: Streamer
 #   hosts: streamer
