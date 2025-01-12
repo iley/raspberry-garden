@@ -21,7 +21,7 @@ server {
   ssl_certificate_key /opt/acme.sh/{{ nginx_domain }}_ecc/{{ nginx_domain }}.key;
 
   ssl_protocols TLSv1.2 TLSv1.3;
-  ssl_ciphers   ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384;
+  ssl_ciphers ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384;
 
   location / {
     proxy_pass http://octoprint/;
